@@ -22,8 +22,8 @@ const MarkerInput = (props) => {
       lng: latLng.split(" ")[1],
       markerType: markerType,
     }
-    axios.post(routeMarkers, data)
-    axios.get(routeMarkers).then((res) => props.updateMarkerCount(res.data.length))
+    axios.post("https://urban-forager.onrender.com/markers", data)
+    axios.get("https://urban-forager.onrender.com/markers").then((res) => props.updateMarkerCount(res.data.length))
   }
 
   return (

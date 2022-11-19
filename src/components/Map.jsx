@@ -18,7 +18,7 @@ const Map = () => {
   useEffect(() => {
     const routeMarkers = process.env.MODE === "production" ? "https://urban-forager.onrender.com/markers" : "http://localhost:3500/markers"
     console.log(routeMarkers)
-    axios.get(routeMarkers).then((res) => setMarker(res.data))
+    axios.get("https://urban-forager.onrender.com/markers").then((res) => setMarker(res.data))
   }, [markerCount])
 
   const handlemarkerCount = (count) => {
