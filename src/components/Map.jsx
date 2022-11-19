@@ -16,9 +16,9 @@ const Map = () => {
   const [tempMarker, setTempMarker] = useState(null)
 
   useEffect(() => {
-    const routeMarkers = process.env.MODE === "production" ? "https://urban-forager.onrender.com/markers" : "http://localhost:3500/markers"
+    const routeMarkers = process.env.REACT_APP_MODE === "production" ? "https://urban-forager.onrender.com/markers" : "http://localhost:3500/markers"
     console.log(routeMarkers)
-    axios.get("https://urban-forager.onrender.com/markers").then((res) => setMarker(res.data))
+    axios.get(routeMarkers).then((res) => setMarker(res.data))
   }, [markerCount])
 
   const handlemarkerCount = (count) => {
@@ -33,12 +33,18 @@ const Map = () => {
   const center = useMemo(() => ({ lat: 39.730156, lng: -121.834401 }), [])
   const vallombrosaAtMangrove = { lat: 39.734033, lng: -121.835557 }
 
+  const mapOptions = {
+    disableDefaultUI: true,
+    styles: [{ elementType: "labels", featureType: "poi.business", stylers: [{ visibility: "off" }] }],
+  }
+
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_API_KEY}>
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
         zoom={15}
+        options={mapOptions}
         onClick={(e) => {
           setMapClick(JSON.stringify(e.latLng.toJSON()))
         }}
