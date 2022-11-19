@@ -16,13 +16,14 @@ const MarkerInput = (props) => {
   }, [props])
 
   const saveData = () => {
+    const routeMarkers = process.env.MODE === 'production' ? 'https://urban-forager.onrender.com/markers' : "http://localhost:3500/markers"
     const data = {
       lat: latLng.split(" ")[0],
       lng: latLng.split(" ")[1],
       markerType: markerType,
     }
-    axios.post("http://localhost:3500/markers", data)
-    axios.get("http://localhost:3500/markers").then((res) => props.updateMarkerCount(res.data.length))
+    axios.post(routeMarkers, data)
+    axios.get(routeMarkers).then((res) => props.updateMarkerCount(res.data.length))
   }
 
   return (

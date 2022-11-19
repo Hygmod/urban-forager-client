@@ -16,7 +16,9 @@ const Map = () => {
   const [tempMarker, setTempMarker] = useState(null)
 
   useEffect(() => {
-    axios.get("http://localhost:3500/markers").then((res) => setMarker(res.data))
+    const routeMarkers = process.env.MODE === 'production' ? 'https://urban-forager.onrender.com/markers' : "http://localhost:3500/markers"
+
+    axios.get(routeMarkers).then((res) => setMarker(res.data))
   }, [markerCount])
 
   const handlemarkerCount = (count) => {

@@ -1,6 +1,5 @@
 import "./App.css"
 import Map from "./components/Map"
-import axios from "axios"
 
 function App() {
   return (
