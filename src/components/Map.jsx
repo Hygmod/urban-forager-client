@@ -1,11 +1,12 @@
 import React from "react"
 import { useMemo, useEffect, useState } from "react"
-import { GoogleMap, LoadScript, useLoadScript, MarkerF } from "@react-google-maps/api"
+import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from "@react-google-maps/api"
 import axios from "axios"
 import MarkerInput from "./MarkerInput"
+import icon from './ylw-pushpin-icon.png'
 
 const containerStyle = {
-  width: "90vw",
+  width: "100vw",
   height: "60vw",
 }
 
@@ -17,25 +18,26 @@ const Map = () => {
 
   useEffect(() => {
     const routeMarkers = process.env.REACT_APP_MODE === "production" ? "https://urban-forager.onrender.com/markers" : "http://localhost:3500/markers"
-    console.log(routeMarkers)
     axios.get(routeMarkers).then((res) => setMarker(res.data))
   }, [markerCount])
 
-  const handlemarkerCount = (count) => {
+  const handleMarkerCount = (count) => {
     setMarkerCount(count)
   }
 
   useEffect(() => {
-    console.log(mapClick)
-    setTempMarker(mapClick ? JSON.parse(mapClick) : { lat: 39.734033, lng: -121.835557 })
+    const vallombrosaAtMangrove = { lat: 39.734033, lng: -121.835557 }
+    setTempMarker(mapClick ? JSON.parse(mapClick) : vallombrosaAtMangrove)
   }, [mapClick])
 
   const center = useMemo(() => ({ lat: 39.730156, lng: -121.834401 }), [])
-  const vallombrosaAtMangrove = { lat: 39.734033, lng: -121.835557 }
 
   const mapOptions = {
     disableDefaultUI: true,
-    styles: [{ elementType: "labels", featureType: "poi.business", stylers: [{ visibility: "off" }] }],
+    styles: [
+      { elementType: "labels", stylers: [{ visibility: "off" }] },
+      { elementType: "labels", featureType: "road", stylers: [{ visibility: "on" }] },
+    ],
   }
 
   return (
@@ -49,16 +51,17 @@ const Map = () => {
           setMapClick(JSON.stringify(e.latLng.toJSON()))
         }}
       >
-        <MarkerF position={tempMarker} />
+        <MarkerF position={tempMarker} icon={icon} />
 
-        {marker.map((e, i) => {
-          return <MarkerF key={i} position={{ lat: Number(e.lat), lng: Number(e.lng) }} />
-        })}
+        {marker.map((e, i) => (
+          <MarkerF key={i} position={{ lat: Number(e.lat), lng: Number(e.lng) }} />
+         
+        ))}
 
         {/* Child components, such as markers, info windows, etc. */}
       </GoogleMap>
       <h4>{mapClick}</h4>
-      <MarkerInput mapClick={mapClick} updateMarkerCount={handlemarkerCount} />
+      <MarkerInput mapClick={mapClick} updateMarkerCount={handleMarkerCount} />
     </LoadScript>
   )
 }
