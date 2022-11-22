@@ -3,7 +3,7 @@ import { useMemo, useEffect, useState } from "react"
 import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from "@react-google-maps/api"
 import axios from "axios"
 import MarkerInput from "./MarkerInput"
-import icon from './ylw-pushpin-icon.png'
+import icon from "./ylw-pushpin-icon.png"
 
 const containerStyle = {
   width: "100vw",
@@ -15,6 +15,8 @@ const Map = () => {
   const [mapClick, setMapClick] = useState(null)
   const [markerCount, setMarkerCount] = useState(0)
   const [tempMarker, setTempMarker] = useState(null)
+  const [showInfoWindow, setShowInfoWindow] = useState(false)
+  const [activeMarker, setActiveMarker] = useState(null)
 
   useEffect(() => {
     const routeMarkers = process.env.REACT_APP_MODE === "production" ? "https://urban-forager.onrender.com/markers" : "http://localhost:3500/markers"
@@ -40,9 +42,25 @@ const Map = () => {
     ],
   }
 
+  const divStyle = {
+    background: `white`,
+    border: `1px solid #000`,
+    padding: 5,
+  }
+
+  const onMarkerClick = (i) => {
+    setActiveMarker(i)
+    setShowInfoWindow(!showInfoWindow)
+  }
+  const onInfoWindowCloseClick = (i) => {
+    setShowInfoWindow(!showInfoWindow)
+  }
+  
+
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_API_KEY}>
       <GoogleMap
+        id="map"
         mapContainerStyle={containerStyle}
         center={center}
         zoom={15}
@@ -54,8 +72,16 @@ const Map = () => {
         <MarkerF position={tempMarker} icon={icon} />
 
         {marker.map((e, i) => (
-          <MarkerF key={i} position={{ lat: Number(e.lat), lng: Number(e.lng) }} />
-         
+          <div key={i}>
+            <MarkerF key={`marker${i}`} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onClick={() => onMarkerClick(i)} />
+            {showInfoWindow && activeMarker === i && (
+              <InfoWindowF key={`infoWondow${i}`} options={{ pixelOffset: new window.google.maps.Size(0, -20) }} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onCloseClick = {onInfoWindowCloseClick}>
+                <div style={divStyle}>
+                  <h3> {e.markerType}</h3>
+                </div>
+              </InfoWindowF>
+            )}
+          </div>
         ))}
 
         {/* Child components, such as markers, info windows, etc. */}
