@@ -4,11 +4,7 @@ import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from "@react-google-maps/
 import axios from "axios"
 import MarkerInput from "./MarkerInput"
 import icon from "./ylw-pushpin-icon.png"
-
-const containerStyle = {
-  width: "100vw",
-  height: "100vw",
-}
+import "../App.css"
 
 const Map = () => {
   const [marker, setMarker] = useState([])
@@ -27,6 +23,11 @@ const Map = () => {
     setMarkerCount(count)
   }
 
+  const containerStyle = {
+    width: "100vw",
+    height: "60vh",
+  }
+
   useEffect(() => {
     const vallombrosaAtMangrove = { lat: 39.734033, lng: -121.835557 }
     setTempMarker(mapClick ? JSON.parse(mapClick) : vallombrosaAtMangrove)
@@ -42,7 +43,7 @@ const Map = () => {
     ],
   }
 
-  const divStyle = {
+  const infoWindowStyle = {
     background: `white`,
     border: `1px solid #000`,
     padding: 5,
@@ -57,44 +58,51 @@ const Map = () => {
   }
 
   const createDropdownOptions = () => {
-    const values = marker.map((e) => e.markerType).sort().reverse()
+    const values = marker
+      .map((e) => e.markerType)
+      .sort()
+      .reverse()
     return [...new Set(values)].map((e) => ({ value: e, label: e }))
   }
 
   const dropdownOptions = createDropdownOptions()
 
+
+
   return (
-    <LoadScript googleMapsApiKey={process.env.REACT_APP_API_KEY}>
-      <GoogleMap
-        id="map"
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={15}
-        options={mapOptions}
-        onClick={(e) => {
-          setMapClick(JSON.stringify(e.latLng.toJSON()))
-        }}
-      >
-        <MarkerF position={tempMarker} icon={icon} />
 
-        {marker.map((e, i) => (
-          <div key={i}>
-            <MarkerF key={`marker${i}`} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onClick={() => onMarkerClick(i)} />
-            {showInfoWindow && activeMarker === i && (
-              <InfoWindowF key={`infoWondow${i}`} options={{ pixelOffset: new window.google.maps.Size(0, -20) }} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onCloseClick={onInfoWindowCloseClick}>
-                <div style={divStyle}>
-                  <h3> {e.markerType}</h3>
-                </div>
-              </InfoWindowF>
-            )}
-          </div>
-        ))}
+      <LoadScript googleMapsApiKey={process.env.REACT_APP_API_KEY}>
+        <GoogleMap
+          id="map"
+          mapContainerStyle={containerStyle}
+          center={center}
+          zoom={15}
+          options={mapOptions}
+          onClick={(e) => {
+            setMapClick(JSON.stringify(e.latLng.toJSON()))
+          }}
+        >
+          <MarkerF position={tempMarker} icon={icon} />
 
-        {/* Child components, such as markers, info windows, etc. */}
-      </GoogleMap>
-      <h4>{mapClick}</h4>
-      <MarkerInput mapClick={mapClick} updateMarkerCount={handleMarkerCount} dropdownOptions={dropdownOptions} />
-    </LoadScript>
+          {marker.map((e, i) => (
+            <div key={i}>
+              <MarkerF key={`marker${i}`} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onClick={() => onMarkerClick(i)} />
+              {showInfoWindow && activeMarker === i && (
+                <InfoWindowF key={`infoWondow${i}`} options={{ pixelOffset: new window.google.maps.Size(0, -20) }} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onCloseClick={onInfoWindowCloseClick}>
+                  <div style={infoWindowStyle}>
+                    <h3> {e.markerType}</h3>
+                  </div>
+                </InfoWindowF>
+              )}
+            </div>
+          ))}
+
+          {/* Child components, such as markers, info windows, etc. */}
+        </GoogleMap>
+        <h4>{mapClick}</h4>
+        <MarkerInput mapClick={mapClick} updateMarkerCount={handleMarkerCount} dropdownOptions={dropdownOptions} />
+      </LoadScript>
+
   )
 }
 
