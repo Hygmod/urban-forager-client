@@ -7,7 +7,7 @@ import icon from "./ylw-pushpin-icon.png"
 
 const containerStyle = {
   width: "100vw",
-  height: "60vw",
+  height: "100vw",
 }
 
 const Map = () => {
