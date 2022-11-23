@@ -32,7 +32,6 @@ const MarkerInput = (props) => {
 
   return (
     <div>
-      <h3>MarkerInput</h3>
       <label>Lat Lng:</label>
       <input type="text" value={latLng} onChange={(e) => setLatLng(e.target.value)}></input>
       <label>Type:</label>
