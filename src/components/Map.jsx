@@ -55,7 +55,6 @@ const Map = () => {
   const onInfoWindowCloseClick = (i) => {
     setShowInfoWindow(!showInfoWindow)
   }
-  
 
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_API_KEY}>
@@ -75,7 +74,7 @@ const Map = () => {
           <div key={i}>
             <MarkerF key={`marker${i}`} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onClick={() => onMarkerClick(i)} />
             {showInfoWindow && activeMarker === i && (
-              <InfoWindowF key={`infoWondow${i}`} options={{ pixelOffset: new window.google.maps.Size(0, -20) }} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onCloseClick = {onInfoWindowCloseClick}>
+              <InfoWindowF key={`infoWondow${i}`} options={{ pixelOffset: new window.google.maps.Size(0, -20) }} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onCloseClick={onInfoWindowCloseClick}>
                 <div style={divStyle}>
                   <h3> {e.markerType}</h3>
                 </div>
@@ -87,7 +86,7 @@ const Map = () => {
         {/* Child components, such as markers, info windows, etc. */}
       </GoogleMap>
       <h4>{mapClick}</h4>
-      <MarkerInput mapClick={mapClick} updateMarkerCount={handleMarkerCount} />
+      <MarkerInput mapClick={mapClick} updateMarkerCount={handleMarkerCount} dropdownOptions={marker.map((e, i) => ({ value: e.markerType, label: e.markerType }))} />
     </LoadScript>
   )
 }

@@ -2,12 +2,13 @@ import React from "react"
 import { useState } from "react"
 import axios from "axios"
 import { useEffect } from "react"
+import Dropdown from "./Dropdown"
+
 
 const MarkerInput = (props) => {
   const [latLng, setLatLng] = useState("")
   const [markerType, setMarkerType] = useState("")
-
-
+  
 
   useEffect(() => {
     if (props.mapClick) {
@@ -33,6 +34,7 @@ const MarkerInput = (props) => {
       <input type="text" value={latLng} onChange={(e) => setLatLng(e.target.value)}></input>
       <label>Type:</label>
       <input type="text" onChange={(e) => setMarkerType(e.target.value)}></input>
+      <Dropdown dropdownOptions={props.dropdownOptions} />
       <button onClick={saveData}>Save</button>
     </div>
   )
