@@ -25,7 +25,7 @@ const Map = () => {
 
   const containerStyle = {
     width: "100vw",
-    height: "50vh",
+    height: "60vh",
   }
 
   useEffect(() => {
@@ -67,10 +67,13 @@ const Map = () => {
 
   const dropdownOptions = createDropdownOptions()
 
-
+const divStyle = {
+  width: "100vw",
+  height: "100vh",
+}
 
   return (
-
+<div style={divStyle}>
       <LoadScript googleMapsApiKey={process.env.REACT_APP_API_KEY}>
         <GoogleMap
           id="map"
@@ -102,7 +105,7 @@ const Map = () => {
         <h4>{mapClick}</h4>
         <MarkerInput mapClick={mapClick} updateMarkerCount={handleMarkerCount} dropdownOptions={dropdownOptions} />
       </LoadScript>
-
+      </div>
   )
 }
 
