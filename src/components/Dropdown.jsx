@@ -7,8 +7,7 @@ const components = {
 }
 
 const Dropdown = (props) => {
-    console.log(props.dropdownOptions)
-  return <CreatableSelect isClearable options={props.dropdownOptions}/>
+  return <CreatableSelect isClearable options={props.dropdownOptions} onChange={value=>props.onChange('value', value)}/>
 }
 
 export default Dropdown

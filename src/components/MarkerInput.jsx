@@ -9,6 +9,9 @@ const MarkerInput = (props) => {
   const [latLng, setLatLng] = useState("")
   const [markerType, setMarkerType] = useState("")
   
+  const handleMarkerInput = (field, value) => {
+    setMarkerType(value.value)
+  }
 
   useEffect(() => {
     if (props.mapClick) {
@@ -33,8 +36,8 @@ const MarkerInput = (props) => {
       <label>Lat Lng:</label>
       <input type="text" value={latLng} onChange={(e) => setLatLng(e.target.value)}></input>
       <label>Type:</label>
-      <input type="text" onChange={(e) => setMarkerType(e.target.value)}></input>
-      <Dropdown dropdownOptions={props.dropdownOptions} />
+      {/* <input type="text" onChange={(e) => setMarkerType(e.target.value)}></input> */}
+      <Dropdown dropdownOptions={props.dropdownOptions} onChange={handleMarkerInput}/>
       <button onClick={saveData}>Save</button>
     </div>
   )

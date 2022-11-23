@@ -56,6 +56,13 @@ const Map = () => {
     setShowInfoWindow(!showInfoWindow)
   }
 
+  const createDropdownOptions = () => {
+    const values = marker.map((e) => e.markerType).sort().reverse()
+    return [...new Set(values)].map((e) => ({ value: e, label: e }))
+  }
+
+  const dropdownOptions = createDropdownOptions()
+
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_API_KEY}>
       <GoogleMap
@@ -86,7 +93,7 @@ const Map = () => {
         {/* Child components, such as markers, info windows, etc. */}
       </GoogleMap>
       <h4>{mapClick}</h4>
-      <MarkerInput mapClick={mapClick} updateMarkerCount={handleMarkerCount} dropdownOptions={marker.map((e, i) => ({ value: e.markerType, label: e.markerType }))} />
+      <MarkerInput mapClick={mapClick} updateMarkerCount={handleMarkerCount} dropdownOptions={dropdownOptions} />
     </LoadScript>
   )
 }
