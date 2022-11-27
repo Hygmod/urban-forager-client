@@ -36,7 +36,7 @@ const MarkerInput = (props) => {
       <input type="text" value={latLng} onChange={(e) => setLatLng(e.target.value)}></input>
       <label>Type:</label>
       <Dropdown isMulti={false} dropdownOptions={props.dropdownOptions} onChange={handleMarkerInput} />
-      <button onClick={saveData}>Save</button>
+      <button className="btn" onClick={saveData}>Save</button>
     </div>
   )
 }

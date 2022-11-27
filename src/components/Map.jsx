@@ -22,7 +22,7 @@ const Map = () => {
   useEffect(() => {
     const routeMarkers = process.env.REACT_APP_MODE === "production" ? "https://urban-forager.onrender.com/markers" : "http://localhost:3500/markers"
     axios.get(routeMarkers).then((res) => {
-      const filteredMarkers = filter?.length ? res.data.filter(e=>filter.includes(e.markerType)) : res.data
+      const filteredMarkers = filter?.length ? res.data.filter((e) => filter.includes(e.markerType)) : res.data
       setMarker(filteredMarkers)
       setAllMarkers(res.data)
     })
@@ -118,9 +118,9 @@ const Map = () => {
 
           {/* Child components, such as markers, info windows, etc. */}
         </GoogleMap>
-        <MarkerInput mapClick={mapClick} updateMarkerCount={handleMarkerCount} dropdownOptions={markerTypeOptions} />
+        <MarkerInput className="marker-input" mapClick={mapClick} updateMarkerCount={handleMarkerCount} dropdownOptions={markerTypeOptions} />
 
-        <Filter dropdownOptions={markerTypeOptions} handleFilter={handleFilter} />
+        <Filter className="filter" dropdownOptions={markerTypeOptions} handleFilter={handleFilter} />
       </LoadScript>
     </div>
   )
