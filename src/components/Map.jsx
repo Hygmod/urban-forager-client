@@ -5,34 +5,48 @@ import axios from "axios"
 import MarkerInput from "./MarkerInput"
 import icon from "./ylw-pushpin-icon.png"
 import "../App.css"
+import Dropdown from "./Dropdown"
+import Filter from "./Filter"
 
 const Map = () => {
   const [marker, setMarker] = useState([])
+  const [allMarkers, setAllMarkers] = useState([])
   const [mapClick, setMapClick] = useState(null)
   const [markerCount, setMarkerCount] = useState(0)
   const [tempMarker, setTempMarker] = useState(null)
   const [showInfoWindow, setShowInfoWindow] = useState(false)
   const [activeMarker, setActiveMarker] = useState(null)
+  const [filter, setFilter] = useState([])
+  const [markerTypeOptions, setMarkerTypeOptions] = useState([])
 
   useEffect(() => {
     const routeMarkers = process.env.REACT_APP_MODE === "production" ? "https://urban-forager.onrender.com/markers" : "http://localhost:3500/markers"
-    axios.get(routeMarkers).then((res) => setMarker(res.data))
-  }, [markerCount])
+    axios.get(routeMarkers).then((res) => {
+      const filteredMarkers = filter?.length ? res.data.filter(e=>filter.includes(e.markerType)) : res.data
+      setMarker(filteredMarkers)
+      setAllMarkers(res.data)
+    })
+  }, [markerCount, filter])
 
-  const handleMarkerCount = (count) => {
-    setMarkerCount(count)
-  }
+  useEffect(() => {
+    const createDropdownOptions = () => {
+      const values = allMarkers
+        .map((e) => e.markerType)
+        .sort()
+        .reverse()
+      return [...new Set(values)].map((e) => ({ value: e, label: e }))
+    }
 
-  const containerStyle = {
-    width: "100vw",
-    height: "60vh",
-  }
+    const dropdownOptions = createDropdownOptions()
+    setMarkerTypeOptions(dropdownOptions)
+  }, [allMarkers])
 
   useEffect(() => {
     const vallombrosaAtMangrove = { lat: 39.734033, lng: -121.835557 }
     setTempMarker(mapClick ? JSON.parse(mapClick) : vallombrosaAtMangrove)
   }, [mapClick])
 
+  //map options and defaults
   const center = useMemo(() => ({ lat: 39.730156, lng: -121.834401 }), [])
 
   const mapOptions = {
@@ -43,12 +57,22 @@ const Map = () => {
     ],
   }
 
+  //Styling
+  const containerStyle = {
+    width: "100vw",
+    height: "60vh",
+  }
   const infoWindowStyle = {
     background: `white`,
     border: `1px solid #000`,
     padding: 5,
   }
+  const divStyle = {
+    width: "100vw",
+    height: "100vh",
+  }
 
+  //prop functions and handlers
   const onMarkerClick = (i) => {
     setActiveMarker(i)
     setShowInfoWindow(!showInfoWindow)
@@ -57,23 +81,15 @@ const Map = () => {
     setShowInfoWindow(!showInfoWindow)
   }
 
-  const createDropdownOptions = () => {
-    const values = marker
-      .map((e) => e.markerType)
-      .sort()
-      .reverse()
-    return [...new Set(values)].map((e) => ({ value: e, label: e }))
+  const handleMarkerCount = (count) => {
+    setMarkerCount(count)
+  }
+  const handleFilter = (value) => {
+    setFilter(value.map((e) => e.value))
   }
 
-  const dropdownOptions = createDropdownOptions()
-
-const divStyle = {
-  width: "100vw",
-  height: "100vh",
-}
-
   return (
-<div style={divStyle}>
+    <div style={divStyle}>
       <LoadScript googleMapsApiKey={process.env.REACT_APP_API_KEY}>
         <GoogleMap
           id="map"
@@ -93,7 +109,7 @@ const divStyle = {
               {showInfoWindow && activeMarker === i && (
                 <InfoWindowF key={`infoWondow${i}`} options={{ pixelOffset: new window.google.maps.Size(0, -20) }} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onCloseClick={onInfoWindowCloseClick}>
                   <div style={infoWindowStyle}>
-                    <h3> {e.markerType}</h3>
+                    <h4> {e.markerType}</h4>
                   </div>
                 </InfoWindowF>
               )}
@@ -102,10 +118,11 @@ const divStyle = {
 
           {/* Child components, such as markers, info windows, etc. */}
         </GoogleMap>
-        <h4>{mapClick}</h4>
-        <MarkerInput mapClick={mapClick} updateMarkerCount={handleMarkerCount} dropdownOptions={dropdownOptions} />
+        <MarkerInput mapClick={mapClick} updateMarkerCount={handleMarkerCount} dropdownOptions={markerTypeOptions} />
+
+        <Filter dropdownOptions={markerTypeOptions} handleFilter={handleFilter} />
       </LoadScript>
-      </div>
+    </div>
   )
 }
 

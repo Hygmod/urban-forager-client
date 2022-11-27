@@ -6,7 +6,7 @@ const components = {
 }
 
 const Dropdown = (props) => {
-  return <CreatableSelect isClearable options={props.dropdownOptions} onChange={value=>props.onChange('value', value)}/>
+  return <CreatableSelect isMulti={props.isMulti} isClearable options={props.dropdownOptions} onChange={(value) => props.onChange(value)}  />
 }
 
 export default Dropdown
