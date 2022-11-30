@@ -1,6 +1,6 @@
 import React from "react"
 import { useState } from "react"
-import axios from "axios"
+import axios from "../api/axios"
 import { useEffect } from "react"
 import Dropdown from "./Dropdown"
 
@@ -20,7 +20,7 @@ const MarkerInput = (props) => {
   }, [props])
 
   const saveData = () => {
-    const routeMarkers = process.env.REACT_APP_MODE === "production" ? "https://urban-forager.onrender.com/markers" : "http://localhost:3500/markers"
+    const routeMarkers = "/markers"
     const data = {
       lat: latLng.split(" ")[0],
       lng: latLng.split(" ")[1],
@@ -32,11 +32,15 @@ const MarkerInput = (props) => {
 
   return (
     <div>
-      <label>Lat Lng:</label>
-      <input type="text" value={latLng} onChange={(e) => setLatLng(e.target.value)}></input>
-      <label>Type:</label>
-      <Dropdown isMulti={false} dropdownOptions={props.dropdownOptions} onChange={handleMarkerInput} />
-      <button className="btn" onClick={saveData}>Save</button>
+      <form>
+        <label htmlFor="latLng">Lat Lng:</label>
+        <input id="latLng" type="text" value={latLng} onChange={(e) => setLatLng(e.target.value)}></input>
+        <label htmlFor="type">Type:</label>
+        <Dropdown id="type" isMulti={false} dropdownOptions={props.dropdownOptions} onChange={handleMarkerInput} />
+        <button className="btn" onClick={saveData}>
+          Save
+        </button>
+      </form>
     </div>
   )
 }

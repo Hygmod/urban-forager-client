@@ -1,11 +1,10 @@
 import React from "react"
 import { useMemo, useEffect, useState } from "react"
 import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from "@react-google-maps/api"
-import axios from "axios"
+import axios from "../api/axios"
 import MarkerInput from "./MarkerInput"
 import icon from "./ylw-pushpin-icon.png"
 import "../App.css"
-import Dropdown from "./Dropdown"
 import Filter from "./Filter"
 
 const Map = () => {
@@ -20,7 +19,7 @@ const Map = () => {
   const [markerTypeOptions, setMarkerTypeOptions] = useState([])
 
   useEffect(() => {
-    const routeMarkers = process.env.REACT_APP_MODE === "production" ? "https://urban-forager.onrender.com/markers" : "http://localhost:3500/markers"
+    const routeMarkers = "/markers"
     axios.get(routeMarkers).then((res) => {
       const filteredMarkers = filter?.length ? res.data.filter((e) => filter.includes(e.markerType)) : res.data
       setMarker(filteredMarkers)
