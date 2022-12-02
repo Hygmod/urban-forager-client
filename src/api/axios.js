@@ -5,3 +5,9 @@ const BASE_URL = process.env.REACT_APP_MODE === "production" ? "https://urban-fo
 export default axios.create({
     baseURL: BASE_URL
 });
+
+export const axiosPrivate = axios.create({
+    baseURL: BASE_URL,
+    headers: { 'Content-Type': 'application/json' },
+    withCredentials: true
+});
