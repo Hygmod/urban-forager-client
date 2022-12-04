@@ -32,6 +32,7 @@ const Login = () => {
     e.preventDefault()
     console.log("Login handleSubmit")
     try {
+      console.log("Login handleSubmit try")
       const response = await axios.post(LOGIN_URL, JSON.stringify({ user, pwd }), {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
@@ -46,6 +47,7 @@ const Login = () => {
       console.log(from)
       navigate(from, { replace: true })
     } catch (err) {
+      console.log("Login handleSubmit err",err)
       if (!err?.response) {
         setErrMsg("No Server Response")
       } else if (err.response?.status === 400) {
@@ -53,7 +55,7 @@ const Login = () => {
       } else if (err.response?.status === 401) {
         setErrMsg("Unauthorized")
       } else {
-        console.log(err)
+        
         setErrMsg("Login Failed")
       }
       errRef.current.focus()
