@@ -11,7 +11,7 @@ const Login = () => {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const from = location.state?.from?.pathname || "/markers"
+  const from = location.state?.from?.pathname || "/"
 
   const userRef = useRef()
   const errRef = useRef()
@@ -30,19 +30,17 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(user, pwd)
-    console.log(from)
     try {
       const response = await axios.post(LOGIN_URL, JSON.stringify({ user, pwd }), {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       })
-      console.log(JSON.stringify(response?.data))
       const accessToken = response?.data?.accessToken
       const roles = response?.data?.roles
       setAuth({ user, pwd, roles, accessToken })
       setUser("")
       setPwd("")
+      console.log(from)
       navigate(from, { replace: true })
     } catch (err) {
       if (!err?.response) {

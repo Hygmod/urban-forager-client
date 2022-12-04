@@ -1,7 +1,9 @@
 import React from "react"
 import { useMemo, useEffect, useState } from "react"
 import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from "@react-google-maps/api"
+import { useNavigate, useLocation } from "react-router-dom"
 import axios from "../api/axios"
+import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import MarkerInput from "./MarkerInput"
 import icon from "./ylw-pushpin-icon.png"
 import "../App.css"
@@ -17,15 +19,43 @@ const Map = () => {
   const [activeMarker, setActiveMarker] = useState(null)
   const [filter, setFilter] = useState([])
   const [markerTypeOptions, setMarkerTypeOptions] = useState([])
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const axiosPrivate = useAxiosPrivate()
 
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    // console.log(auth)
+
     const routeMarkers = "/markers"
-    axios.get(routeMarkers).then((res) => {
-      const filteredMarkers = filter?.length ? res.data.filter((e) => filter.includes(e.markerType)) : res.data
-      setMarker(filteredMarkers)
-      setAllMarkers(res.data)
-    })
+    const getMarkers = async () => {
+      try {
+        const res = await axiosPrivate.get(routeMarkers, {
+          signal: controller.signal
+      })
+        
+        const filteredMarkers = filter?.length ? res.data.filter((e) => filter.includes(e.markerType)) : res.data
+        isMounted && setMarker(filteredMarkers)
+        isMounted && setAllMarkers(res.data)
+      } catch (err) {
+        console.error(err)
+        navigate("/login", { state: { from: location }, replace: true })
+      }
+    }
+    getMarkers()
   }, [markerCount, filter])
+  // useEffect(() => {
+  //   console.log("Map.jsx /markers")
+  //   const routeMarkers = "/markers"
+  //   axiosPrivate.get(routeMarkers).then((res) => {
+  //     const filteredMarkers = filter?.length ? res.data.filter((e) => filter.includes(e.markerType)) : res.data
+  //     setMarker(filteredMarkers)
+  //     setAllMarkers(res.data)
+  //   })
+  // }, [markerCount, filter])
 
   useEffect(() => {
     const createDropdownOptions = () => {

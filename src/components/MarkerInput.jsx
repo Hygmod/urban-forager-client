@@ -1,12 +1,15 @@
 import React from "react"
 import { useState } from "react"
 import axios from "../api/axios"
+import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import { useEffect } from "react"
 import Dropdown from "./Dropdown"
 
 const MarkerInput = (props) => {
   const [latLng, setLatLng] = useState("")
   const [markerType, setMarkerType] = useState("")
+
+  const axiosPrivate = useAxiosPrivate()
 
   const handleMarkerInput = (value) => {
     setMarkerType(value?.value)
@@ -19,15 +22,16 @@ const MarkerInput = (props) => {
     }
   }, [props])
 
-  const saveData = () => {
+  const saveData = (e) => {
+    e.preventDefault()
     const routeMarkers = "/markers"
     const data = {
       lat: latLng.split(" ")[0],
       lng: latLng.split(" ")[1],
       markerType: markerType,
     }
-    axios.post(routeMarkers, data)
-    axios.get(routeMarkers).then((res) => props.updateMarkerCount(res.data.length))
+    axiosPrivate.post(routeMarkers, data)
+    axiosPrivate.get(routeMarkers).then((res) => props.updateMarkerCount(res.data.length))
   }
 
   return (
