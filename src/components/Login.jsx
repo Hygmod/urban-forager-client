@@ -53,6 +53,7 @@ const Login = () => {
       } else if (err.response?.status === 401) {
         setErrMsg("Unauthorized")
       } else {
+        console.log(err)
         setErrMsg("Login Failed")
       }
       errRef.current.focus()
