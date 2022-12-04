@@ -1,6 +1,5 @@
 import React from "react"
 import { useState } from "react"
-import axios from "../api/axios"
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import { useEffect } from "react"
 import Dropdown from "./Dropdown"

@@ -2,7 +2,6 @@ import React from "react"
 import { useMemo, useEffect, useState } from "react"
 import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from "@react-google-maps/api"
 import { useNavigate, useLocation } from "react-router-dom"
-import axios from "../api/axios"
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import MarkerInput from "./MarkerInput"
 import icon from "./ylw-pushpin-icon.png"
@@ -30,14 +29,12 @@ const Map = () => {
 
     // console.log(auth)
 
-    const routeMarkers = "/markers"
     const getMarkers = async () => {
       try {
-        const res = await axiosPrivate.get(routeMarkers, {
+        const res = await axiosPrivate.get("/markers", {
           signal: controller.signal
       })
-        
-        const filteredMarkers = filter?.length ? res.data.filter((e) => filter.includes(e.markerType)) : res.data
+                const filteredMarkers = filter?.length ? res.data.filter((e) => filter.includes(e.markerType)) : res.data
         isMounted && setMarker(filteredMarkers)
         isMounted && setAllMarkers(res.data)
       } catch (err) {

@@ -30,11 +30,14 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    console.log("Login handleSubmit")
     try {
       const response = await axios.post(LOGIN_URL, JSON.stringify({ user, pwd }), {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       })
+      console.log("Login response", response)
+
       const accessToken = response?.data?.accessToken
       const roles = response?.data?.roles
       setAuth({ user, pwd, roles, accessToken })
