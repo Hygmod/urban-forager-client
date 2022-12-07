@@ -24,17 +24,15 @@ const Map = () => {
   const axiosPrivate = useAxiosPrivate()
 
   useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
-
-    // console.log(auth)
+    let isMounted = true
+    const controller = new AbortController()
 
     const getMarkers = async () => {
       try {
         const res = await axiosPrivate.get("/markers", {
-          signal: controller.signal
-      })
-                const filteredMarkers = filter?.length ? res.data.filter((e) => filter.includes(e.markerType)) : res.data
+          signal: controller.signal,
+        })
+        const filteredMarkers = filter?.length ? res.data.filter((e) => filter.includes(e.markerType)) : res.data
         isMounted && setMarker(filteredMarkers)
         isMounted && setAllMarkers(res.data)
       } catch (err) {
@@ -111,6 +109,7 @@ const Map = () => {
     setMarkerCount(count)
   }
   const handleFilter = (value) => {
+    // value.preventDefault()
     setFilter(value.map((e) => e.value))
   }
 

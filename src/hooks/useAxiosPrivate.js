@@ -26,7 +26,11 @@ const useAxiosPrivate = () => {
           prevRequest.sent = true
           const newAccessToken = await refresh()
           prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`
-          return axiosPrivate(prevRequest)
+          return axiosPrivate({
+            ...prevRequest,
+            headers: {...prevRequest.headers, Authorization: `Bearer ${newAccessToken}`},
+            sent: true
+        })
         }
         return Promise.reject(error)
       }
