@@ -12,7 +12,6 @@ const useRefreshToken = () => {
         });
         return response.data.accessToken;
     }
-    console.log('useRefreshToken return refresh')
     return refresh;
 };
 

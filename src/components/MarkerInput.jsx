@@ -16,7 +16,6 @@ const MarkerInput = (props) => {
 
   useEffect(() => {
     if (props.mapClick) {
-      console.log(props.mapClick)
       setLatLng(`${JSON.parse(props.mapClick).lat} ${JSON.parse(props.mapClick).lng}`)
     }
   }, [props])

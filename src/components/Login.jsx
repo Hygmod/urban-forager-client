@@ -35,17 +35,14 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       })
-      console.log("Login response", response)
 
       const accessToken = response?.data?.accessToken
       const roles = response?.data?.roles
       setAuth({ user, pwd, roles, accessToken })
       setUser("")
       setPwd("")
-      console.log(from)
       navigate(from, { replace: true })
     } catch (err) {
-      console.log("Login handleSubmit err",err)
       if (!err?.response) {
         setErrMsg("No Server Response")
       } else if (err.response?.status === 400) {
