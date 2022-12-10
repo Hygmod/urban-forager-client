@@ -4,9 +4,26 @@ import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from "@react-google-maps/
 import { useNavigate, useLocation } from "react-router-dom"
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import MarkerInput from "./MarkerInput"
-import icon from "./ylw-pushpin-icon.png"
+import ylwPushpinIcon from "./markerIcons/ylw-pushpin-icon.png"
+import bayleaf from "./markerIcons/bayleaf.jpg"
+import lemon from "./markerIcons/lemon.jpg"
+import lime from "./markerIcons/lime.jpg"
+import orange from "./markerIcons/orange.jpg"
+import persimmon from "./markerIcons/persimmon.jpg"
+import pineappleguava from "./markerIcons/pineappleguava.jpg"
+import rosemary from "./markerIcons/rosemary.png"
 import "../App.css"
 import Filter from "./Filter"
+
+const markerIcons = {
+  'bayleaf': bayleaf,
+  'lemon': lemon,
+  'lime': lime,
+  'orange': orange,
+  'persimmon': persimmon,
+  'pineappleguava': pineappleguava,
+  'rosemary': rosemary
+}
 
 const Map = () => {
   const [marker, setMarker] = useState([])
@@ -20,7 +37,6 @@ const Map = () => {
   const [markerTypeOptions, setMarkerTypeOptions] = useState([])
   const navigate = useNavigate()
   const location = useLocation()
-
   const axiosPrivate = useAxiosPrivate()
 
   useEffect(() => {
@@ -42,15 +58,6 @@ const Map = () => {
     }
     getMarkers()
   }, [markerCount, filter])
-  // useEffect(() => {
-  //   console.log("Map.jsx /markers")
-  //   const routeMarkers = "/markers"
-  //   axiosPrivate.get(routeMarkers).then((res) => {
-  //     const filteredMarkers = filter?.length ? res.data.filter((e) => filter.includes(e.markerType)) : res.data
-  //     setMarker(filteredMarkers)
-  //     setAllMarkers(res.data)
-  //   })
-  // }, [markerCount, filter])
 
   useEffect(() => {
     const createDropdownOptions = () => {
@@ -126,11 +133,11 @@ const Map = () => {
             setMapClick(JSON.stringify(e.latLng.toJSON()))
           }}
         >
-          <MarkerF position={tempMarker} icon={icon} />
+          <MarkerF position={tempMarker} icon={ylwPushpinIcon} />
 
           {marker.map((e, i) => (
             <div key={i}>
-              <MarkerF key={`marker${i}`} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onClick={() => onMarkerClick(i)} />
+              <MarkerF key={`marker${i}`} icon={markerIcons[e.markerType] ? markerIcons[e.markerType] : '' } position={{ lat: Number(e.lat), lng: Number(e.lng) }} onClick={() => onMarkerClick(i)} />
               {showInfoWindow && activeMarker === i && (
                 <InfoWindowF key={`infoWondow${i}`} options={{ pixelOffset: new window.google.maps.Size(0, -20) }} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onCloseClick={onInfoWindowCloseClick}>
                   <div style={infoWindowStyle}>

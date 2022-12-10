@@ -104,7 +104,7 @@ const Signup = () => {
                             id="username"
                             ref={userRef}
                             autoComplete="off"
-                            onChange={(e) => setUser(e.target.value)}
+                            onChange={(e) => setUser(e.target.value.toLowerCase())}
                             value={user}
                             required
                             aria-invalid={validName ? "false" : "true"}

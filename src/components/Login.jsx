@@ -65,7 +65,7 @@ const Login = () => {
       <h1>Sign In</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
-        <input type="text" id="username" ref={userRef} autoComplete="off" onChange={(e) => setUser(e.target.value)} value={user} required />
+        <input type="text" id="username" ref={userRef} autoComplete="off" onChange={(e) => setUser(e.target.value.toLowerCase())} value={user} required />
 
         <label htmlFor="password">Password:</label>
         <input type="password" id="password" onChange={(e) => setPwd(e.target.value)} value={pwd} required />
