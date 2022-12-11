@@ -137,6 +137,9 @@ const Map = () => {
 
           {marker.map((e, i) => (
             <div key={i}>
+              {console.log(marker)}
+              {console.log(markerIcons[e.markerType])}
+              {console.log(e.markerType)}
               <MarkerF key={`marker${i}`} icon={markerIcons[e.markerType] ? markerIcons[e.markerType] : '' } position={{ lat: Number(e.lat), lng: Number(e.lng) }} onClick={() => onMarkerClick(i)} />
               {showInfoWindow && activeMarker === i && (
                 <InfoWindowF key={`infoWondow${i}`} options={{ pixelOffset: new window.google.maps.Size(0, -20) }} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onCloseClick={onInfoWindowCloseClick}>
