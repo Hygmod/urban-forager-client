@@ -7,7 +7,7 @@ import axios from "../api/axios"
 const LOGIN_URL = "/auth"
 
 const Login = () => {
-  const { setAuth } = useAuth()
+  const { setAuth, persist, setPersist } = useAuth()
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -50,12 +50,19 @@ const Login = () => {
       } else if (err.response?.status === 401) {
         setErrMsg("Unauthorized")
       } else {
-        
         setErrMsg("Login Failed")
       }
       errRef.current.focus()
     }
   }
+
+  const togglePersist = () => {
+    setPersist((prev) => !prev)
+  }
+
+  useEffect(() => {
+    localStorage.setItem("persist", persist)
+  }, [persist])
 
   return (
     <section>
@@ -70,6 +77,10 @@ const Login = () => {
         <label htmlFor="password">Password:</label>
         <input type="password" id="password" onChange={(e) => setPwd(e.target.value)} value={pwd} required />
         <button>Sign In</button>
+        <div className="persistCheck">
+          <input type="checkbox" id="persist" onChange={togglePersist} checked={persist} />
+          <label htmlFor="persist">Trust this device</label>
+        </div>
       </form>
       <p>
         Need an Account?
