@@ -4,6 +4,9 @@ import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from "@react-google-maps/
 import { useNavigate, useLocation } from "react-router-dom"
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import MarkerInput from "./MarkerInput"
+import "../App.css"
+import Filter from "./Filter"
+
 import ylwPushpinIcon from "./markerIcons/ylw-pushpin-icon.png"
 import bayleaf from "./markerIcons/bayleaf.jpg"
 import lemon from "./markerIcons/lemon.jpg"
@@ -12,17 +15,16 @@ import orange from "./markerIcons/orange.jpg"
 import persimmon from "./markerIcons/persimmon.jpg"
 import pineappleguava from "./markerIcons/pineappleguava.jpg"
 import rosemary from "./markerIcons/rosemary.png"
-import "../App.css"
-import Filter from "./Filter"
+
 
 const markerIcons = {
-  'bayleaf': bayleaf,
-  'lemon': lemon,
-  'lime': lime,
-  'orange': orange,
-  'persimmon': persimmon,
-  'pineappleguava': pineappleguava,
-  'rosemary': rosemary
+  bayleaf: bayleaf,
+  lemon: lemon,
+  lime: lime,
+  orange: orange,
+  persimmon: persimmon,
+  pineappleguava: pineappleguava,
+  rosemary: rosemary,
 }
 
 const Map = () => {
@@ -51,26 +53,41 @@ const Map = () => {
         const filteredMarkers = filter?.length ? res.data.filter((e) => filter.includes(e.markerType)) : res.data
         isMounted && setMarker(filteredMarkers)
         isMounted && setAllMarkers(res.data)
+
+        const createDropdownOptions = () => {
+          const values = res.data
+            .map((e) => e.markerType)
+            .sort()
+            .reverse()
+          return [...new Set(values)].map((e) => ({ value: e, label: e }))
+        }
+        setMarkerTypeOptions(createDropdownOptions)
+
       } catch (err) {
         console.error(err)
         navigate("/login", { state: { from: location }, replace: true })
       }
     }
     getMarkers()
-  }, [markerCount, filter])
+  }, [markerCount])
 
   useEffect(() => {
-    const createDropdownOptions = () => {
-      const values = allMarkers
-        .map((e) => e.markerType)
-        .sort()
-        .reverse()
-      return [...new Set(values)].map((e) => ({ value: e, label: e }))
-    }
+    const filteredMarkers = filter?.length ? allMarkers.filter((e) => filter.includes(e.markerType)) : allMarkers
+    setMarker(filteredMarkers)
+  }, [filter])
 
-    const dropdownOptions = createDropdownOptions()
-    setMarkerTypeOptions(dropdownOptions)
-  }, [allMarkers])
+  // useEffect(() => {
+  //   const createDropdownOptions = () => {
+  //     const values = allMarkers
+  //       .map((e) => e.markerType)
+  //       .sort()
+  //       .reverse()
+  //     return [...new Set(values)].map((e) => ({ value: e, label: e }))
+  //   }
+
+  //   const dropdownOptions = createDropdownOptions()
+  //   setMarkerTypeOptions(dropdownOptions)
+  // }, [allMarkers])
 
   useEffect(() => {
     const vallombrosaAtMangrove = { lat: 39.734033, lng: -121.835557 }
@@ -120,6 +137,11 @@ const Map = () => {
     setFilter(value.map((e) => e.value))
   }
 
+  const setIcon = (e) => {
+    console.log(markerIcons[e])
+    return markerIcons[e]
+  }
+
   return (
     <div style={divStyle}>
       <LoadScript googleMapsApiKey={process.env.REACT_APP_API_KEY}>
@@ -137,10 +159,7 @@ const Map = () => {
 
           {marker.map((e, i) => (
             <div key={i}>
-              {console.log(marker)}
-              {console.log(markerIcons[e.markerType])}
-              {console.log(e.markerType)}
-              <MarkerF key={`marker${i}`} icon={markerIcons[e.markerType] ? markerIcons[e.markerType] : '' } position={{ lat: Number(e.lat), lng: Number(e.lng) }} onClick={() => onMarkerClick(i)} />
+              <MarkerF key={`marker${i}`} icon={setIcon(e.markerType)} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onClick={() => onMarkerClick(i)} />
               {showInfoWindow && activeMarker === i && (
                 <InfoWindowF key={`infoWondow${i}`} options={{ pixelOffset: new window.google.maps.Size(0, -20) }} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onCloseClick={onInfoWindowCloseClick}>
                   <div style={infoWindowStyle}>
