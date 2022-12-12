@@ -16,7 +16,6 @@ import persimmon from "./markerIcons/persimmon.jpg"
 import pineappleguava from "./markerIcons/pineappleguava.jpg"
 import rosemary from "./markerIcons/rosemary.png"
 
-
 const markerIcons = {
   bayleaf: bayleaf,
   lemon: lemon,
@@ -62,7 +61,6 @@ const Map = () => {
           return [...new Set(values)].map((e) => ({ value: e, label: e }))
         }
         setMarkerTypeOptions(createDropdownOptions)
-
       } catch (err) {
         console.error(err)
         navigate("/login", { state: { from: location }, replace: true })
@@ -137,10 +135,7 @@ const Map = () => {
     setFilter(value.map((e) => e.value))
   }
 
-  const setIcon = (e) => {
-    console.log(markerIcons[e])
-    return markerIcons[e]
-  }
+  const setIcon = (e) => markerIcons[e]
 
   return (
     <div style={divStyle}>
@@ -155,6 +150,8 @@ const Map = () => {
             setMapClick(JSON.stringify(e.latLng.toJSON()))
           }}
         >
+          {console.log(marker)}
+
           <MarkerF position={tempMarker} icon={ylwPushpinIcon} />
 
           {marker.map((e, i) => (
