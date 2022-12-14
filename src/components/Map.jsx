@@ -8,25 +8,18 @@ import "../App.css"
 import Filter from "./Filter"
 
 import ylwPushpinIcon from "./markerIcons/ylw-pushpin-icon.png"
-import bayleaf from "./markerIcons/bayleaf.jpg"
-import lemon from "./markerIcons/lemon.jpg"
-import lime from "./markerIcons/lime.jpg"
-import orange from "./markerIcons/orange.jpg"
-import persimmon from "./markerIcons/persimmon.jpg"
-import pineappleguava from "./markerIcons/pineappleguava.jpg"
+import bayleaf from "./markerIcons/bayleaf.png"
+import lemon from "./markerIcons/lemon.png"
+import lime from "./markerIcons/lime.png"
+import orange from "./markerIcons/orange.png"
+import persimmon from "./markerIcons/persimmon.png"
+import pineappleguava from "./markerIcons/pineappleguava.png"
 import rosemary from "./markerIcons/rosemary.png"
 
-const markerIcons = {
-  bayleaf: bayleaf,
-  lemon: lemon,
-  lime: lime,
-  orange: orange,
-  persimmon: persimmon,
-  pineappleguava: pineappleguava,
-  rosemary: rosemary,
-}
-
 const Map = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const axiosPrivate = useAxiosPrivate()
   const [marker, setMarker] = useState([])
   const [allMarkers, setAllMarkers] = useState([])
   const [mapClick, setMapClick] = useState(null)
@@ -36,9 +29,19 @@ const Map = () => {
   const [activeMarker, setActiveMarker] = useState(null)
   const [filter, setFilter] = useState([])
   const [markerTypeOptions, setMarkerTypeOptions] = useState([])
-  const navigate = useNavigate()
-  const location = useLocation()
-  const axiosPrivate = useAxiosPrivate()
+  const [center, setCenter] = useState({ lat: 39.730156, lng: -121.834401 })
+  const [markerIcons, setMarkerIcons] = useState({ bayleaf: bayleaf, lemon: lemon, lime: lime, orange: orange, persimmon: persimmon, pineappleguava: pineappleguava, rosemary: rosemary })
+  // const [markerIcons, setMarkerIcons] = useState([bayleaf, lemon, lime, orange, persimmon, pineappleguava, rosemary])
+
+  // const markerIcons = {
+  //   bayleaf: bayleaf,
+  //   lemon: lemon,
+  //   lime: lime,
+  //   orange: orange,
+  //   persimmon: persimmon,
+  //   pineappleguava: pineappleguava,
+  //   rosemary: rosemary,
+  // }
 
   useEffect(() => {
     let isMounted = true
@@ -67,25 +70,19 @@ const Map = () => {
       }
     }
     getMarkers()
+    return () => {
+      isMounted = false
+    }
   }, [markerCount])
 
   useEffect(() => {
     const filteredMarkers = filter?.length ? allMarkers.filter((e) => filter.includes(e.markerType)) : allMarkers
     setMarker(filteredMarkers)
+
+    const averageLat = Number(filteredMarkers.reduce((a, c) => Number(c.lat) + a, 0) / filteredMarkers.length)
+    const averageLng = Number(filteredMarkers.reduce((a, c) => Number(c.lng) + a, 0) / filteredMarkers.length)
+    filter.length ? setCenter({ lat: averageLat, lng: averageLng }) : setCenter({ lat: 39.730156, lng: -121.834401 })
   }, [filter])
-
-  // useEffect(() => {
-  //   const createDropdownOptions = () => {
-  //     const values = allMarkers
-  //       .map((e) => e.markerType)
-  //       .sort()
-  //       .reverse()
-  //     return [...new Set(values)].map((e) => ({ value: e, label: e }))
-  //   }
-
-  //   const dropdownOptions = createDropdownOptions()
-  //   setMarkerTypeOptions(dropdownOptions)
-  // }, [allMarkers])
 
   useEffect(() => {
     const vallombrosaAtMangrove = { lat: 39.734033, lng: -121.835557 }
@@ -93,7 +90,7 @@ const Map = () => {
   }, [mapClick])
 
   //map options and defaults
-  const center = useMemo(() => ({ lat: 39.730156, lng: -121.834401 }), [])
+  // const center = useMemo(() => ({ lat: 39.730156, lng: -121.834401 }), [])
 
   const mapOptions = {
     disableDefaultUI: true,
@@ -131,11 +128,15 @@ const Map = () => {
     setMarkerCount(count)
   }
   const handleFilter = (value) => {
-    // value.preventDefault()
     setFilter(value.map((e) => e.value))
   }
 
-  const setIcon = (e) => markerIcons[e]
+  const handleIcon = (e) => {
+    //TODO: the icons are showing properly when filtered, changing them to default markers until I can revisit this
+    // return markerIcons[e]
+    return ''
+    
+  }
 
   return (
     <div style={divStyle}>
@@ -150,22 +151,23 @@ const Map = () => {
             setMapClick(JSON.stringify(e.latLng.toJSON()))
           }}
         >
-          {console.log(marker)}
-
           <MarkerF position={tempMarker} icon={ylwPushpinIcon} />
 
-          {marker.map((e, i) => (
-            <div key={i}>
-              <MarkerF key={`marker${i}`} icon={setIcon(e.markerType)} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onClick={() => onMarkerClick(i)} />
-              {showInfoWindow && activeMarker === i && (
-                <InfoWindowF key={`infoWondow${i}`} options={{ pixelOffset: new window.google.maps.Size(0, -20) }} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onCloseClick={onInfoWindowCloseClick}>
-                  <div style={infoWindowStyle}>
-                    <h4> {e.markerType}</h4>
-                  </div>
-                </InfoWindowF>
-              )}
-            </div>
-          ))}
+          {marker.map((e, i) => {
+            return (
+              <div key={i}>
+                <MarkerF key={`marker${i}`} icon={handleIcon(e.markerType)} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onClick={() => onMarkerClick(i)} />
+
+                {showInfoWindow && activeMarker === i && (
+                  <InfoWindowF key={`infoWondow${i}`} options={{ pixelOffset: new window.google.maps.Size(0, -20) }} position={{ lat: Number(e.lat), lng: Number(e.lng) }} onCloseClick={onInfoWindowCloseClick}>
+                    <div style={infoWindowStyle}>
+                      <h4> {e.markerType}</h4>
+                    </div>
+                  </InfoWindowF>
+                )}
+              </div>
+            )
+          })}
 
           {/* Child components, such as markers, info windows, etc. */}
         </GoogleMap>
