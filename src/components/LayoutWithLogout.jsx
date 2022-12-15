@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom"
 import Home from "./Home"
 
-const Layout = () => {
+const LayoutWithLogout = () => {
     return (
         <main className="App">
             <Outlet />
@@ -10,4 +10,4 @@ const Layout = () => {
     )
 }
 
-export default Layout
+export default LayoutWithLogout
