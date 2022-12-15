@@ -15,6 +15,8 @@ import orange from "./markerIcons/orange.png"
 import persimmon from "./markerIcons/persimmon.png"
 import pineappleguava from "./markerIcons/pineappleguava.png"
 import rosemary from "./markerIcons/rosemary.png"
+import { useContext } from "react"
+import { UserContext } from "../context/UserContext"
 
 const Map = () => {
   const navigate = useNavigate()
@@ -31,25 +33,16 @@ const Map = () => {
   const [markerTypeOptions, setMarkerTypeOptions] = useState([])
   const [center, setCenter] = useState({ lat: 39.730156, lng: -121.834401 })
   const [markerIcons, setMarkerIcons] = useState({ bayleaf: bayleaf, lemon: lemon, lime: lime, orange: orange, persimmon: persimmon, pineappleguava: pineappleguava, rosemary: rosemary })
-  // const [markerIcons, setMarkerIcons] = useState([bayleaf, lemon, lime, orange, persimmon, pineappleguava, rosemary])
 
-  // const markerIcons = {
-  //   bayleaf: bayleaf,
-  //   lemon: lemon,
-  //   lime: lime,
-  //   orange: orange,
-  //   persimmon: persimmon,
-  //   pineappleguava: pineappleguava,
-  //   rosemary: rosemary,
-  // }
+  const {userId} = useContext(UserContext)
 
   useEffect(() => {
     let isMounted = true
     const controller = new AbortController()
 
-    const getMarkers = async () => {
+      const getMarkers = async () => {
       try {
-        const res = await axiosPrivate.get("/markers", {
+        const res = await axiosPrivate.get("/markers",{ params: { user: userId } }, {
           signal: controller.signal,
         })
         const filteredMarkers = filter?.length ? res.data.filter((e) => filter.includes(e.markerType)) : res.data

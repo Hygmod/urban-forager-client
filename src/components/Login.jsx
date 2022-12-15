@@ -1,8 +1,9 @@
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState, useEffect, useContext } from "react"
 import useAuth from "../hooks/useAuth"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 
 import axios from "../api/axios"
+import { UserContext } from "../context/UserContext"
 
 const LOGIN_URL = "/auth"
 
@@ -19,6 +20,8 @@ const Login = () => {
   const [user, setUser] = useState("")
   const [pwd, setPwd] = useState("")
   const [errMsg, setErrMsg] = useState("")
+
+  const { userId, setUserId } = useContext(UserContext)
 
   useEffect(() => {
     userRef.current.focus()
@@ -38,12 +41,15 @@ const Login = () => {
 
       const accessToken = response?.data?.accessToken
       const roles = response?.data?.roles
+      const user_id = response?.data?.user_id
+      
       setAuth({ user, pwd, roles, accessToken })
       setUser("")
       setPwd("")
+      setUserId(user_id)
       navigate(from, { replace: true })
     } catch (err) {
-      if (!err?.response) {
+            if (!err?.response) {
         setErrMsg("No Server Response")
       } else if (err.response?.status === 400) {
         setErrMsg("Missing Username or Password")

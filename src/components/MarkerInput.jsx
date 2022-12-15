@@ -1,12 +1,14 @@
-import React from "react"
+import React, { useContext } from "react"
 import { useState } from "react"
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import { useEffect } from "react"
 import Dropdown from "./Dropdown"
+import { UserContext } from "../context/UserContext"
 
 const MarkerInput = (props) => {
   const [latLng, setLatLng] = useState("")
   const [markerType, setMarkerType] = useState("")
+  const {userId} = useContext(UserContext)
 
   const axiosPrivate = useAxiosPrivate()
 
@@ -27,6 +29,7 @@ const MarkerInput = (props) => {
       lat: latLng.split(" ")[0],
       lng: latLng.split(" ")[1],
       markerType: markerType,
+      user:userId
     }
     axiosPrivate.post(routeMarkers, data)
     axiosPrivate.get(routeMarkers).then((res) => props.updateMarkerCount(res.data.length))

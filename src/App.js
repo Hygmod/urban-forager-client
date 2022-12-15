@@ -7,6 +7,8 @@ import Missing from "./components/Missing"
 import RequireAuth from "./components/RequireAuth"
 import PersistLogin from "./components/PersistLogin"
 import { Routes, Route } from "react-router-dom"
+import { useMemo, useState } from "react"
+import { UserContext } from "./context/UserContext"
 
 const ROLES = {
   User: 2001,
@@ -15,7 +17,11 @@ const ROLES = {
 }
 
 function App() {
+  const [userId, setUserId] = useState("")
+  const user_id = useMemo(() => ({ userId, setUserId }), [userId, setUserId])
+
   return (
+    <UserContext.Provider value={user_id}>
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route path="login" element={<Login />} />
@@ -32,6 +38,7 @@ function App() {
         <Route path="*" element={<Missing />} />
       </Route>
     </Routes>
+    </UserContext.Provider>
   )
 }
 
