@@ -38,13 +38,15 @@ const Map = () => {
 
   useEffect(() => {
     let isMounted = true
-    const controller = new AbortController()
+    // const controller = new AbortController()
 
       const getMarkers = async () => {
       try {
-        const res = await axiosPrivate.get("/markers",{ params: { user: userId } }, {
-          signal: controller.signal,
-        })
+        const res = await axiosPrivate.get("/markers",{ params: { user: userId } }
+        // , {
+        //   signal: controller.signal,
+        // }
+        )
         const filteredMarkers = filter?.length ? res.data.filter((e) => filter.includes(e.markerType)) : res.data
         isMounted && setMarker(filteredMarkers)
         isMounted && setAllMarkers(res.data)

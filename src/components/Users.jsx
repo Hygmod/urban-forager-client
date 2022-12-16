@@ -10,13 +10,15 @@ const Users = () => {
 
   useEffect(() => {
     let isMounted = true
-    const controller = new AbortController()
+    // const controller = new AbortController()
 
     const getUsers = async () => {
       try {
-        const response = await axiosPrivate.get("/users", {
-          signal: controller.signal,
-        })
+        const response = await axiosPrivate.get("/users"
+        // , {
+        //   signal: controller.signal,
+        // }
+        )
         isMounted && setUsers(response.data)
       } catch (err) {
         console.error(err)
